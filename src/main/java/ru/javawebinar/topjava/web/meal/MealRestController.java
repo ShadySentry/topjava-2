@@ -39,7 +39,7 @@ public class MealRestController {
 
     public Meal save(Meal meal) {
         log.info("create {}", meal);
-        checkNew(meal);
+//        checkNew(meal);
         return service.save(meal, AuthorizedUser.id());
     }
 
@@ -56,11 +56,7 @@ public class MealRestController {
 
     public List<MealWithExceed> getAllByDateTime(LocalDateTime start, LocalDateTime stop){
         log.info("getAllByDateTime", AuthorizedUser.id(),start,stop);
-        List<Meal> meals = service.getAll(AuthorizedUser.id());
-        List<MealWithExceed> withExceeds = MealsUtil.getFilteredWithExceeded(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY, start.toLocalTime(), stop.toLocalTime());
-       return  withExceeds.stream().filter(e -> e.getDateTime().isAfter(start) && e.getDateTime().isBefore(stop))
-                .collect(Collectors.toList());
-
+        List<Meal> meals = service.getAllByDateTime(AuthorizedUser.id(), start,stop);
+        return MealsUtil.getFilteredWithExceeded(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY, LocalTime.MIN, LocalTime.MAX);
     }
-
 }

@@ -60,6 +60,6 @@ public class MealServiceImpl implements MealService {
     @Override
     public List<Meal> getAllByDateTime(int userid, LocalDateTime start, LocalDateTime stop) {
         log.info("getAllByDateTime",userid,start,stop);
-        return repository.getAllByDateTime(userid, start.toLocalTime(),stop.toLocalTime(),start.toLocalDate(),stop.toLocalDate());
+        return repository.getAllByDateTime(userid, start,stop);
     }
 }

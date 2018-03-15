@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.repository.mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
@@ -40,6 +41,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
             repository.put(meal.getId(), meal);
             return meal;
         }
+         meal.setUserid(userid);
         // treat case: update, but absent in storage
         return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
@@ -48,7 +50,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     public void delete(int id, int userid) {
         log.info("detele {}", id,userid);
         Meal m =  repository.values().stream().filter(e -> e.getId() == id && e.getUserid() == userid).findFirst().get();
-        repository.remove(m);
+        repository.remove(m.getId());
     }
 
     @Override
@@ -64,11 +66,11 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAllByDateTime(int userid, LocalTime starttime, LocalTime endtime, LocalDate startdate , LocalDate enddate) {
+    public List<Meal> getAllByDateTime(int userid, LocalDateTime start, LocalDateTime stop) {
         log.info("getAllByTime");
-//        return getAll(userid).stream().filter(e -> e.getDateTime().compareTo(starttime) >= 0 && e.getDateTime().compareTo(stoptime) <= 0).collect(Collectors.toList());
-        return getAll(userid).stream().filter(e -> e.getDate().compareTo(startdate) >= 0 && e.getDate().compareTo(enddate) <= 0 &&
-                e.getTime().compareTo(starttime) >= 0 && e.getTime().compareTo(endtime) <= 0).collect(Collectors.toList());
+        List<Meal> all = getAll(AuthorizedUser.id());
+        List<Meal> allfilter = all.stream().filter(e -> e.getDateTime().compareTo(start) >= 0 && e.getDateTime().compareTo(stop) <= 0 ).collect(Collectors.toList());
+        return allfilter;
     }
 }
 
