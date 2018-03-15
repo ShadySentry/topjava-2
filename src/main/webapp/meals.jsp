@@ -17,11 +17,34 @@
     </style>
 </head>
 <body>
+
+</form>
 <section>
+
+
     <h3><a href="index.html">Home</a></h3>
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <hr/>
+
+
+    <form method="post" action="/meals">
+
+        <label>Start Date</label>
+        <input type="date" name="startdate">
+        <label>Start Time</label>
+        <input type="time" name="startime">
+        <br/>
+        <br/>
+        <label>End Date</label>
+        <input type="date" name="enddate">
+        <label>End Time</label>
+        <input type="time" name="endtime">
+
+        <input type="submit">
+    </form>
+
+
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
