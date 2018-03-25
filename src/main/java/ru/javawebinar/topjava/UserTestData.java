@@ -2,10 +2,13 @@ package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import static org.assertj.core.api.Assertions.assertThat;
+
+
 
 import java.util.Arrays;
 
-import static org.assertj.core.api.Assertions.assertThat;
+
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class UserTestData {

@@ -13,6 +13,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -41,7 +42,7 @@ public class MealServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void testDeleteNotFound() throws Exception {
-        service.delete(MEAL1_ID, 1);
+        service.delete(99999, 999);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class MealServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void testGetNotFound() throws Exception {
-        service.get(MEAL1_ID, ADMIN_ID);
+        service.get(999, ADMIN_ID);
     }
 
     @Test
@@ -76,6 +77,8 @@ public class MealServiceTest {
 
     @Test
     public void testGetAll() throws Exception {
+
+        List<Meal> meals = service.getAll(USER_ID);
         assertMatch(service.getAll(USER_ID), MEALS);
     }
 
