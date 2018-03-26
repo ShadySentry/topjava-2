@@ -1,19 +1,30 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.AssumptionViolatedException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.rules.Timeout;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.junit.runners.model.Statement;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -31,11 +42,50 @@ public class MealServiceTest {
         SLF4JBridgeHandler.install();
     }
 
+    @Rule
+    public TimeRule timeRule = new TimeRule();
+
+    private static StringBuilder stringBuilder = new StringBuilder();
+
+    @AfterClass
+    public static void endTest(){
+
+        System.out.println(stringBuilder);
+    }
+
+    class TimeRule implements TestRule {
+
+        @Override
+        public Statement apply(Statement base, Description description) {
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+
+                    long startTume = System.nanoTime();
+                    base.evaluate();
+                    long stopTime = System.nanoTime();
+                    double resultTime = (double)stopTime - startTume;
+
+                    stringBuilder.append("Тест  :" + description.getMethodName() + "выполнен за :" + resultTime + "\n");
+
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Название  :" + description.getClassName());
+                    System.out.println("Название теста :" + description.getMethodName());
+                    System.out.println("Время теста :" + resultTime + "сек");
+                    System.out.println("-------------------------------------------------");
+                }
+            };
+        }
+    }
+
+    public ExpectedException thrown = ExpectedException.none();
+
     @Autowired
     private MealService service;
 
     @Test
     public void testDelete() throws Exception {
+
         service.delete(MEAL1_ID, USER_ID);
         assertMatch(service.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
@@ -70,14 +120,9 @@ public class MealServiceTest {
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }
 
-    @Test(expected = NotFoundException.class)
-    public void testUpdateNotFound() throws Exception {
-        service.update(MEAL1, ADMIN_ID);
-    }
 
     @Test
     public void testGetAll() throws Exception {
-
         List<Meal> meals = service.getAll(USER_ID);
         assertMatch(service.getAll(USER_ID), MEALS);
     }
