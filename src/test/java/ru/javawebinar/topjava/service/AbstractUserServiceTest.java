@@ -22,14 +22,18 @@ import java.util.List;
 
 import static ru.javawebinar.topjava.UserTestData.*;
 
+
+
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
+        "classpath:spring/spring-db.xml",
+//        "classpath:spring/spring-tools.xml"
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
-public class UserServiceTest {
+public class AbstractUserServiceTest {
+
 
     static {
         // Only for postgres driver logging
@@ -40,14 +44,14 @@ public class UserServiceTest {
     @Autowired
     private UserService service;
 
-    @Autowired
-    private CacheManager cacheManager;
+//    @Autowired
+//    private CacheManager cacheManager;
 
     @Before
     public void setUp() throws Exception {
-        cacheManager.getCache("users").clear();
+//        cacheManager.getCache("users").clear();
     }
-        
+
     @Test
     public void create() throws Exception {
         User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false, Collections.singleton(Role.ROLE_USER));
