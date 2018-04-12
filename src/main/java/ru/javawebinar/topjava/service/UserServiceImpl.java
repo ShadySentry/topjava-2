@@ -45,6 +45,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getWithMeals(int id) {
+        return null;
+    }
+
+    @Override
     public List<User> getAll() {
         return repository.getAll();
     }
