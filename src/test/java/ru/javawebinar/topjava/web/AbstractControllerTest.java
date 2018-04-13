@@ -41,7 +41,7 @@ abstract public class AbstractControllerTest {
 
     protected  MockMvc mockMvc;
 
-    @Autowired(required = false)
+    @Autowired
     private CacheManager cacheManager;
 
     @Autowired(required = false)
@@ -64,7 +64,7 @@ abstract public class AbstractControllerTest {
 
     @Before
     public void setUp() {
-//        cacheManager.getCache("users").clear();
+        cacheManager.getCache("users").clear();
         if (jpaUtil != null) {
             jpaUtil.clear2ndLevelHibernateCache();
         }

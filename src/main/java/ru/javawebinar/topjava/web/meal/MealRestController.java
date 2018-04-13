@@ -20,12 +20,9 @@ import java.util.List;
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
-@RestController
-@RequestMapping(MealRestController.REST_URL)
+@Controller
 public class MealRestController {
     private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
-
-    static final String REST_URL = "/rest/meals";
 
     private final MealService service;
 
@@ -34,36 +31,36 @@ public class MealRestController {
         this.service = service;
     }
 
-    @GetMapping("/{id}")
+
     public Meal get(@PathVariable("id") int id) {
         int userId = AuthorizedUser.id();
         log.info("get meal {} for user {}", id, userId);
         return service.get(id, userId);
     }
 
-    @DeleteMapping("/{id}")
-     public void delete(@PathVariable("id") int id) {
+
+    public void delete(@PathVariable("id") int id) {
         int userId = AuthorizedUser.id();
         log.info("delete meal {} for user {}", id, userId);
         service.delete(id, userId);
     }
 
-    @GetMapping()
+
     public List<MealWithExceed> getAll() {
         int userId = AuthorizedUser.id();
         log.info("getAll for user {}", userId);
         return MealsUtil.getWithExceeded(service.getAll(userId), AuthorizedUser.getCaloriesPerDay());
     }
 
-    @PostMapping
+
     public Meal create(@RequestBody Meal meal) {
         int userId = AuthorizedUser.id();
         checkNew(meal);
         log.info("create {} for user {}", meal, userId);
         return service.create(meal, userId);
     }
-    @PutMapping("/{id}")
-    public void update(@RequestBody Meal meal,@PathVariable("id") int id) {
+
+    public void update(@RequestBody Meal meal, @PathVariable("id") int id) {
         int userId = AuthorizedUser.id();
         assureIdConsistent(meal, id);
         log.info("update {} for user {}", meal, userId);
@@ -77,11 +74,8 @@ public class MealRestController {
      * </ol>
      */
 
-    @GetMapping("/between")
-    public List<MealWithExceed> getBetween(@RequestParam("startDate")@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                           @RequestParam("startTime")@DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
-                                           @RequestParam("endDate")@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate endDate,
-                                           @RequestParam("endTime")@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)LocalTime endTime) {
+
+    public List<MealWithExceed> getBetween(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         int userId = AuthorizedUser.id();
         log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, userId);
         List<Meal> mealsDateFiltered = service.getBetweenDates(
