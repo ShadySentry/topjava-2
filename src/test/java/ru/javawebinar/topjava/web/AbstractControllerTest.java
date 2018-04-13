@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -37,9 +38,10 @@ abstract public class AbstractControllerTest {
         CHARACTER_ENCODING_FILTER.setForceEncoding(true);
     }
 
-    protected MockMvc mockMvc;
 
-    @Autowired
+    protected  MockMvc mockMvc;
+
+    @Autowired(required = false)
     private CacheManager cacheManager;
 
     @Autowired(required = false)
@@ -49,7 +51,7 @@ abstract public class AbstractControllerTest {
     protected UserService userService;
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    protected   WebApplicationContext webApplicationContext;
 
     @PostConstruct
     private void postConstruct() {
@@ -59,9 +61,10 @@ abstract public class AbstractControllerTest {
                 .build();
     }
 
+
     @Before
     public void setUp() {
-        cacheManager.getCache("users").clear();
+//        cacheManager.getCache("users").clear();
         if (jpaUtil != null) {
             jpaUtil.clear2ndLevelHibernateCache();
         }
