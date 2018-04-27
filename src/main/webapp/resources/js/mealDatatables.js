@@ -6,8 +6,12 @@ function updateTable() {
         type: "POST",
         url: ajaxUrl + "filter",
         data: $("#filter").serialize(),
-        success: updateTableByData
-    });
+    }).done(updateTableByData);
+}
+
+function clearFilter() {
+    $("#filter")[0].reset();
+    $.get(ajaxUrl, updateTableByData);
 }
 
 $(function () {
